@@ -69,13 +69,19 @@ This should BE USED WITH CAUTION as it will delete files from your system and th
 composer config extra.builder.cleanup true
 composer install
 ```
-This will be added in the conposer.json
+This will be added in the composer.json
 ```json
     "extra": {
         "builder": {
             "cleanup": "true"
         }
     }
+```
+
+### Run tests
+```bash
+composer install
+composer run test
 ```
 
 ## Roadmap
@@ -120,19 +126,3 @@ Distributed under the [MIT License][license-url].
 [issues-url]: https://github.com/helsingborg-stad/builder/issues
 [license-shield]: https://img.shields.io/github/license/helsingborg-stad/builder.svg?style=flat-square
 [license-url]: https://raw.githubusercontent.com/helsingborg-stad/builder/master/LICENSE
-
-
-TODO: 
-Tests.
-Do cleanup function.
-Do command execute function.
-
-
-In github action.
-```
-composer config extra.builder.cleanup true
-composer install
-```
-
-
-
