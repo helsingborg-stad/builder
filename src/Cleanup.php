@@ -12,6 +12,11 @@ class Cleanup
         $this->package = $package;
     }
 
+    /**
+     * Cleanup alla removables.
+     * @param string $installPath install path for visualization.
+     * @return void
+     */
     public function doCleanup(string $installPath)
     {
         foreach ($this->getRemovables() as $removable) {
@@ -20,12 +25,21 @@ class Cleanup
         }
     }
 
+    /**
+     * Get removable files and folder from composer.json extra/builder config.
+     * @return array
+     */
     public function getRemovables(): array
     {
         $extra = $this->package->getExtra();
         return isset($extra['builder']['removables']) ? $extra['builder']['removables'] : [];
     }
 
+    /**
+     * Remove file or folder.
+     * @param string $path Path to file or folder.
+     * @return void
+     */
     public function removePath(string $path)
     {
         if (is_dir($path)) {

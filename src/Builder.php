@@ -12,6 +12,11 @@ class Builder
         $this->package = $package;
     }
 
+    /**
+     * Get build commands composer.json extra/builder config.
+     * @param $installPath Install path for visualization.
+     * @return void
+     */
     public function runCommands(string $installPath)
     {
         foreach ($this->getBuildCommands() as $buildCommand) {
@@ -27,11 +32,16 @@ class Builder
         }
     }
 
+    /**
+     * Get build commands composer.json extra/builder config.
+     * @return array
+     */
     public function getBuildCommands(): array
     {
         $extra = $this->package->getExtra();
         return isset($extra['builder']['commands']) ? $extra['builder']['commands'] : [];
     }
+
     /**
      * Better shell script execution with live output to STDOUT and status code return.
      * @param  string $command Command to execute in shell.
