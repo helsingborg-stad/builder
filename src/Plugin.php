@@ -11,6 +11,7 @@ use Composer\Package\CompletePackage;
 use Composer\Installer\LibraryInstaller;
 use HelsingborgStad\Builder\Cleanup;
 use HelsingborgStad\Builder\Builder;
+use Composer\Package\Package;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -33,22 +34,36 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         return array(
             'post-package-install' => [
-                ['builder']
+                ['install']
+            ],
+            'post-package-update' => [
+                ['update']
             ]
         );
     }
 
-    public function builder(PackageEvent $packageEvent)
+    public function update(PackageEvent $packageEvent)
+    {
+        $package = $packageEvent->getOperation()->getTargetPackage();
+        $this->builder($package);
+    }
+
+    public function install(PackageEvent $packageEvent)
     {
         $package = $packageEvent->getOperation()->getPackage();
+        $this->builder($package);
+    }
+
+    public function builder(Package $package)
+    {
         $installedPackageExtra = $package->getExtra();
         if (isset($installedPackageExtra['builder'])) {
             $currentPackageExtra = $this->composer->getPackage()->getExtra();
             $doCleanup = isset($currentPackageExtra['builder']['cleanup'])
-                && $currentPackageExtra['builder']['cleanup'] == true;
+                && $currentPackageExtra['builder']['cleanup'] == "true";
 
             $installPath = $this->composer->getInstallationManager()->getInstallPath($package);
-
+            $originalPath = getcwd();
             chdir($installPath);
 
             $builder = new Builder($package);
@@ -58,6 +73,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
                 $cleanup = new Cleanup($package);
                 $cleanup->doCleanup($installPath);
             }
+            chdir($originalPath);
         }
     }
 }
