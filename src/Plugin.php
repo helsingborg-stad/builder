@@ -62,7 +62,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $installedPackageExtra = $package->getExtra();
         if (isset($installedPackageExtra['builder'])) {
-            $currentPackageExtra = $this->composer->getPackage();
+            $currentPackageExtra = $this->composer->getPackage()->getExtra();
             $doCleanup = isset($currentPackageExtra['builder']['cleanup'])
                 && $currentPackageExtra['builder']['cleanup'] == "true";
 
