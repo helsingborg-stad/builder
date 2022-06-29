@@ -19,10 +19,13 @@ class Cleanup
      */
     public function doCleanup(string $installPath)
     {
+        $originalPath = getcwd();
+        chdir($installPath);
         foreach ($this->getRemovables() as $removable) {
             print "Removing $removable from $installPath\n";
             $this->removePath($removable);
         }
+        chdir($originalPath);
     }
 
     /**

@@ -12,6 +12,7 @@ use Composer\Installer\LibraryInstaller;
 use HelsingborgStad\Builder\Cleanup;
 use HelsingborgStad\Builder\Builder;
 use Composer\Package\Package;
+use Composer\Script\Event;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -38,6 +39,9 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             ],
             'post-package-update' => [
                 ['update']
+            ],
+            'post-update-cmd' => [
+                ['rootCleanup']
             ]
         );
     }
@@ -58,13 +62,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         $installedPackageExtra = $package->getExtra();
         if (isset($installedPackageExtra['builder'])) {
-            $currentPackageExtra = $this->composer->getPackage()->getExtra();
+            $currentPackageExtra = $this->composer->getPackage();
             $doCleanup = isset($currentPackageExtra['builder']['cleanup'])
                 && $currentPackageExtra['builder']['cleanup'] == "true";
 
             $installPath = $this->composer->getInstallationManager()->getInstallPath($package);
-            $originalPath = getcwd();
-            chdir($installPath);
 
             $builder = new Builder($package);
             $builder->runCommands($installPath);
@@ -73,7 +75,19 @@ class Plugin implements PluginInterface, EventSubscriberInterface
                 $cleanup = new Cleanup($package);
                 $cleanup->doCleanup($installPath);
             }
-            chdir($originalPath);
+        }
+    }
+
+    public function rootCleanup(Event $event)
+    {
+        $currentPackage = $this->composer->getPackage();
+        $currentPackageExtra = $currentPackage->getExtra();
+        $doCleanup = isset($currentPackageExtra['builder']['cleanup'])
+            && $currentPackageExtra['builder']['cleanup'] == "true";
+
+        if ($doCleanup) {
+            $cleanup = new Cleanup($currentPackage);
+            $cleanup->doCleanup(getcwd());
         }
     }
 }

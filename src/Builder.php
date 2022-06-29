@@ -19,6 +19,8 @@ class Builder
      */
     public function runCommands(string $installPath)
     {
+        $originalPath = getcwd();
+        chdir($installPath);
         foreach ($this->getBuildCommands() as $buildCommand) {
             print "---- Running build command '$buildCommand' for $installPath. ----\n";
             $timeStart = microtime(true);
@@ -30,6 +32,7 @@ class Builder
             $buildTime = round(microtime(true) - $timeStart);
             print "---- Done build command '$buildCommand' for $installPath.  Build time: $buildTime seconds. ----\n";
         }
+        chdir($originalPath);
     }
 
     /**

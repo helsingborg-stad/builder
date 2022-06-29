@@ -32,7 +32,7 @@ class CleanupTest extends TestCase
     public function testDoCleanup()
     {
         $removable = 'somethingToRemove';
-        $testPath = 'test/path';
+        $testPath = __DIR__ . '/testassets';
 
         $package = $this->createStub(Package::class);
         $package->method('getExtra')
@@ -52,7 +52,7 @@ class CleanupTest extends TestCase
 
     public function testRemovePathFile()
     {
-        $testPath = 'test/path';
+        $testPath = __DIR__ . '/testassets/testremovable1';
 
         $package = $this->createMock(Package::class);
 

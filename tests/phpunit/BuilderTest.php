@@ -32,7 +32,7 @@ class BuilderTest extends TestCase
     public function testRunCommandsErrorCodeNotZero()
     {
         $testCommand = 'testcommand';
-        $testPath = '/testpath';
+        $testPath = __DIR__ . '/testassets';
 
         $package = $this->createStub(Package::class);
         $package->method('getExtra')
@@ -59,7 +59,7 @@ class BuilderTest extends TestCase
     public function testRunCommandsMultiple()
     {
         $testCommand = 'testcommand';
-        $testPath = '/testpath';
+        $testPath = __DIR__ . '/testassets';
 
         $package = $this->createStub(Package::class);
         $package->method('getExtra')
