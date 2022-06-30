@@ -52,9 +52,10 @@ class Cleanup
                 \RecursiveIteratorIterator::CHILD_FIRST
             );
             foreach ($recursiveIterator as $file) {
-                $this->remove($file->getRealPath());
+                    $this->remove($file->getPathname());
             }
         }
+
         $this->remove($path);
     }
 
@@ -66,7 +67,7 @@ class Cleanup
      */
     public function remove(string $path)
     {
-        if (file_exists($path)) {
+        if (file_exists($path) || is_link($path)) {
             is_dir($path) ? rmdir($path) : unlink($path);
         }
     }
